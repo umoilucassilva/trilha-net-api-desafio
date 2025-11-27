@@ -17,6 +17,17 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Teste pra ficar no lugar da migration
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<OrganizadorContext>();
+
+    // Cria o banco e as tabelas se não existirem. 
+    // Isso substitui a necessidade de rodar dotnet ef database update
+    context.Database.EnsureCreated();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
